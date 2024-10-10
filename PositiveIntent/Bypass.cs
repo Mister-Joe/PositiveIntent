@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using TestSvc.Data;
-using TestSvc.DynamicInvoke;
+using PositiveIntent.Data;
+using PositiveIntent.DynamicInvoke;
 
-namespace TestSvc;
+namespace PositiveIntent;
 
 // TODO: add better error handling
 // TODO: fully implement D/Invoke w/ API hashing

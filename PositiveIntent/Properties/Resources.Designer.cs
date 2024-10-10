@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TestSvc.Properties {
+namespace PositiveIntent.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace TestSvc.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TestSvc.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PositiveIntent.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,9 @@ namespace TestSvc.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] file1 {
+        internal static byte[] File1 {
             get {
-                object obj = ResourceManager.GetObject("file1", resourceCulture);
+                object obj = ResourceManager.GetObject("File1", resourceCulture);
                 return ((byte[])(obj));
             }
         }

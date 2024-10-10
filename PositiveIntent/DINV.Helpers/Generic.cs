@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace TestSvc.DynamicInvoke;
+namespace PositiveIntent.DynamicInvoke;
 
 /// <summary>
 /// Generic is a class for dynamically invoking arbitrary API calls from memory or disk. DynamicInvoke avoids suspicious

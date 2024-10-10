@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace TestSvc.Data;
+namespace PositiveIntent.Data;
 
 /// <summary>
 /// Win32 is a library of enums and structures for Win32 API functions.

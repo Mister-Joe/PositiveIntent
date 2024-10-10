@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace TestSvc.Data;
+namespace PositiveIntent.Data;
 
 /// <summary>
 /// Native is a library of enums and structures for Native (NtDll) API functions.

@@ -28,9 +28,10 @@ class RC4:
             output[k] = data[k] ^ key_stream
         return output
 
-def encrypt_file(input_file_path, output_file_path, key):
+def encrypt_file(file, output_file_path, key):
+
     # Read the input file into a byte array
-    file_bytes = input_file_path.read()
+    file_bytes = file.read()
     
     # Create an instance of the RC4 class
     rc4 = RC4(key)
@@ -41,11 +42,11 @@ def encrypt_file(input_file_path, output_file_path, key):
     # Write the encrypted bytes to a new file
     with open(output_file_path, 'wb') as file:
         file.write(encrypted_bytes)
-        print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Encrypted and embedded {input_file_path.name} as a resource file")
 
-# Example usage
 def run(file):
+
     # Set the key (it must be in bytes)
     key = b'DepthSecurity'
+    
     # Encrypt the executable file
     encrypt_file(file, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..\\temp\\PositiveIntent\\Resources\\File1.exe"), key)

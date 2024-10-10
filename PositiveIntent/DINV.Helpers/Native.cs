@@ -5,7 +5,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace TestSvc.DynamicInvoke;
+namespace PositiveIntent.DynamicInvoke;
 
 /// <summary>
 /// Contains function prototypes and wrapper functions for dynamically invoking NT API Calls.

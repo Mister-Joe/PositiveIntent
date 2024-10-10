@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TestSvc;
+namespace PositiveIntent;
 
 public class StringHelper
 {

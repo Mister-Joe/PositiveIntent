@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace TestSvc.Data;
+namespace PositiveIntent.Data;
 
 /// <summary>
 /// Holds data structures for using PEs.
