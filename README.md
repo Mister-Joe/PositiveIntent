@@ -19,6 +19,8 @@
 - Miscellaneous AV/EDR Evasion Features
   - Python post-build script signs the loader with a self-certificate certificate using values cloned from a domain of your choice
   - No P/Invoke. Full implementation of D/Invoke with API hashing.
+- Compatibility
+  - Built with .NET Framework 4.8 and C# 7.3 to ensure maximum compatibility with various Windows versions.
 
 ## Installation
 
@@ -56,4 +58,5 @@ python build.py --file "..\Rubeus.exe" --hostname JOE-WIN10-VM --domain www.zoom
 - Add obfuscation of class names to `obfuscate.py`
 - Add obfuscation of namespace names `obfuscate.py`
 - Programatically generate and randomize `assemblyinfo.cs`
+- Port all Python pre/post-build scripts to .NET & cross-compile for Linux
 - ???
