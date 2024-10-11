@@ -49,6 +49,8 @@ python build.py --file /tmp/Internal-Monologue.exe --hostname PFC-SYSCTR --domai
 | Vendor | Tool | Status |
 | ------------- | ------------- | ------------- |
 | SentinelOne | Rubeus | Undetected (10/11/2024) |
+| SentinelOne | Seeker | Undetected (10/11/2024) |
+| SentinelOne | Internal Monologue | Undetected (10/11/2024) |
 | CrowdStrike | Rubeus | Undetected (10/11/2024) |
 | CrowdStrike | Seeker | Undetected (10/11/2024) |
 | CrowdStrike | Internal Monologue | Detected (Behavioral) |
