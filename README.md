@@ -32,11 +32,11 @@ sudo bash install.sh
 ## Usage
 
 ```
-python build.py --file /tmp/Internal-Monologue.exe --hostname PFC-SYSCTR --domain www.zoom.com --delay 60
+python build.py --file /tmp/Rubeus.exe --hostname PFC-SYSCTR --domain www.zoom.com --delay 60
 
 [+] Obfuscated loader source files
 [+] Keyed on hostname PFC-SYSCTR
-[+] Encrypted and embedded /tmp/Internal-Monologue.exe as a resource file
+[+] Encrypted and embedded /tmp/Rubeus.exe as a resource file
 [+] Randomized loader filename
 [+] Embedded 1 books as resource files
 [+] Entropy of loader: 5.35
