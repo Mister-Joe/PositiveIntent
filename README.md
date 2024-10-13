@@ -13,7 +13,7 @@
   - AmsiScanBuffer patched in-memory (via D/Invoke)
 - Static Signature & Memory Scanning Evasion
   - Python pre-build script obfuscates all (most) methods, variables, strings, delegates, classes, and namespaces before building the loader
-  - Your .NET assembly of choice (Rubeus, Seatbelt, etc.) is embedded in the loader as a resource file and RC4 encrypted
+  - Your .NET assembly of choice (Rubeus, Seeker, etc.) is embedded in the loader as a resource file and RC4 encrypted
   - Certain variables, such as the byte array containing the opcodes used for patching AmsiScanBuffer, are also RC4 encrypted
   - No suspicious usage of crypto libraries - RC4 encryption/decryption is performed using a "raw" implementation of the RC4 algorithm (thanks ChatGPT)
 - Miscellaneous AV/EDR Evasion Features
