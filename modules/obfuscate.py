@@ -4,6 +4,7 @@ import shutil
 import random
 import string
 import colorama
+import xml.etree.ElementTree as ET
 
 # Function to reverse a string
 def obfuscate_string(original_string, string_map):
@@ -20,12 +21,40 @@ def obfuscate_name(original_method, obfuscation_map):
 def update_references(content, obfuscation_map):
     for original_name, obfuscated_name in obfuscation_map.items():
         content = re.sub(rf'\b{original_name}\b', obfuscated_name, content)
-        # change solution namespace
-        if original_name == 'PositiveIntent':
-            with open(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../PositiveIntent.sln")), 'r+', encoding='utf-8') as file:
-                additional_content = file.read()
-                additional_content = re.sub(r'=\s"PositiveIntent"', f'= "{obfuscated_name}"', additional_content)
     return content
+
+# update solution namespace to match randomized assembly name
+def randomize_namespace(csproj_filepath, new_name):
+
+    # Parse the .csproj XML file
+    tree = ET.parse(csproj_filepath)
+    root = tree.getroot()
+
+    property_group = root.find('PropertyGroup')
+    if property_group is not None:
+        assembly_name_element = ET.SubElement(property_group, 'RootNamespace')
+
+    # Update the AssemblyName to the new random name
+    assembly_name_element.text = new_name
+    
+    # Write changes back to the .csproj file
+    tree.write(csproj_filepath, encoding="utf-8", xml_declaration=True)
+
+    with open(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp/PositiveIntent.sln")), 'r+', encoding='utf-8') as file:
+                additional_content = file.read()
+                additional_content = re.sub(r'=\s"PositiveIntent"', f'= "{new_name}"', additional_content)
+                file.seek(0)
+                file.write(additional_content)
+                file.truncate()
+
+    with open(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp/PositiveIntent/Properties/Resources.Designer.cs")), 'r+', encoding='utf-8') as file:
+                additional_content = file.read()
+                additional_content = re.sub(r'PositiveIntent', f'{new_name}', additional_content)
+                file.seek(0)
+                file.write(additional_content)
+                file.truncate()
+
+    return new_name
 
 def update_strings(content, string_map):
     for original_name, obfuscated_name in string_map.items():
@@ -43,6 +72,24 @@ def update_delay(content, delay):
     content = re.sub(r'13371337', str(delay * 1000), content)
     return content
 
+def randomize_assembly_name(csproj_filepath, new_name):
+    
+    # Parse the .csproj XML file
+    tree = ET.parse(csproj_filepath)
+    root = tree.getroot()
+
+    property_group = root.find('PropertyGroup')
+    if property_group is not None:
+        assembly_name_element = ET.SubElement(property_group, 'AssemblyName')
+
+    # Update the AssemblyName to the new random name
+    assembly_name_element.text = new_name
+    
+    # Write changes back to the .csproj file
+    tree.write(csproj_filepath, encoding="utf-8", xml_declaration=True)
+
+    return new_name
+
 # Function to obfuscate method names
 def obfuscate_methods(content, obfuscation_map):
     method_pattern = re.compile(r'(public|private|protected|internal)\s(static|delegate)\s(.*NTSTATUS|void|int|double|IntPtr|string|bool|uint|T)\s(\w*)')
@@ -59,7 +106,7 @@ def obfuscate_classes(content, obfuscation_map):
         if original_class != 'StringHelper' and original_class != 'Generic' and original_class != "for":
             obfuscate_name(original_class, obfuscation_map)
 
-# Function to obfuscate class names
+# Function to obfuscate namespaces
 def obfuscate_namespaces(content, obfuscation_map):
     namespace_pattern = re.compile(r'(namespace)\s(\w*)\s|(namespace)\s(\w*)\.(\w*)\s')
     for match in namespace_pattern.finditer(content):
@@ -104,7 +151,6 @@ def process_file(file_path, obfuscation_map, string_map):
     obfuscate_methods(content, obfuscation_map)
     obfuscate_variables(content, obfuscation_map)
     obfuscate_classes(content, obfuscation_map)
-    obfuscate_namespaces(content, obfuscation_map)
     obfuscate_strings(content, obfuscation_map, string_map)
 
 def run(hostname, delay):
@@ -131,6 +177,11 @@ def run(hostname, delay):
             if file_name.endswith('.cs'):
                 process_file(file_path, obfuscation_map, string_map)
 
+    csproj_filepath = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp/PositiveIntent/PositiveIntent.csproj"))
+    assembly_name = randomize_assembly_name(csproj_filepath, ''.join(random.choices(string.ascii_letters, k=8)))
+    namespace = randomize_namespace(csproj_filepath, ''.join(random.choices(string.ascii_letters, k=8)))
+    obfuscation_map['PositiveIntent'] = namespace
+    
     # Loop over source files again and update all references to obfuscated methods, variables, and strings
     for root, dirs, files in os.walk(output_dir, topdown=True):
         dirs[:] = [d for d in dirs if d not in ("bin", "obj", "Resources", "Properties")]
@@ -146,3 +197,4 @@ def run(hostname, delay):
                     file.seek(0)
                     file.write(content)
                     file.truncate()
+    return assembly_name

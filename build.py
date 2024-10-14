@@ -9,27 +9,8 @@ from modules import entropy
 from modules import sign
 import subprocess
 import os
-import xml.etree.ElementTree as ET
 import colorama
-
-def randomize_assembly_name(csproj_path, new_name):
-    
-    # Parse the .csproj XML file
-    tree = ET.parse(csproj_path)
-    root = tree.getroot()
-
-    property_group = root.find('PropertyGroup')
-    if property_group is not None:
-        assembly_name_element = ET.SubElement(property_group, 'AssemblyName')
-
-    # Update the AssemblyName to the new random name
-    assembly_name_element.text = new_name
-    
-    # Write changes back to the .csproj file
-    tree.write(csproj_path, encoding="utf-8", xml_declaration=True)
-    print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Randomized loader filename")
-
-    return new_name
+import xml.etree.ElementTree as ET
 
 def embed_book(resx_file_path, resource_name, text_file_path):
 
@@ -55,14 +36,15 @@ def embed_book(resx_file_path, resource_name, text_file_path):
     # Write the updated .resx file
     tree.write(resx_file_path, encoding="utf-8", xml_declaration=True)
 
-def build():
+def build(assembly_name):
 
-    assembly_name = randomize_assembly_name(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp/PositiveIntent/PositiveIntent.csproj")), ''.join(random.choices(string.ascii_letters, k=8)))
     assembly_output_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"temp/PositiveIntent/bin/Release/net48/{assembly_name}.exe"))
     solution_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp/PositiveIntent.sln"))
     resources_directory_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp/PositiveIntent/Resources"))
     resources_file_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp/PositiveIntent/Properties/Resources.resx"))
     embed_count = 0
+
+    print(colorama.Fore.YELLOW + "[*] " + colorama.Style.RESET_ALL + f'Building loader and adjusting entropy...please hold.')
 
     if sys.platform == 'win32':
         subprocess.run(["dotnet", "build", "--configuration", "Release", solution_path], check=True, stdout = subprocess.DEVNULL)
@@ -111,10 +93,12 @@ if __name__=="__main__":
 
     # obfuscate loader source
     # key on hostname
+    # randomize assembly name
     try:
-        obfuscate.run(args.hostname, args.delay)
+        assembly_name = obfuscate.run(args.hostname, args.delay)
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Obfuscated loader source files')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Keyed on hostname {args.hostname}')
+        print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Randomized loader filename")
     except Exception as exception: # is this error handling?
         print(colorama.Fore.RED + "[-] " + colorama.Style.RESET_ALL + f'Failed to obfuscate source files')
         print(traceback.print_exc())
@@ -131,8 +115,7 @@ if __name__=="__main__":
 
     # build loader and adjust entropy
     try:
-        print(colorama.Fore.YELLOW + "[*] " + colorama.Style.RESET_ALL + f'Building loader and adjusting entropy...please hold.')
-        assembly_name = build()
+        build(assembly_name)
     except Exception as exception:
         print(colorama.Fore.RED + "[-] " + colorama.Style.RESET_ALL + f'Failed to build loader.')
         print(traceback.print_exc())
