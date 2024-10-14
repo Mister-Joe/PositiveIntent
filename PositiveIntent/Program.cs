@@ -56,7 +56,7 @@ namespace PositiveIntent
         }
         private static void LoadAssembly(string[] args)
         {
-            byte[] eassembly = PositiveIntent.Properties.Resources.File1;
+            byte[] eassembly = Properties.Resources.File1;
             byte[] key = System.Text.Encoding.UTF8.GetBytes("DepthSecurity");
 
             RC4 rc4 = new RC4(key);
