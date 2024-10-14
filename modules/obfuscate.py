@@ -24,7 +24,7 @@ def update_references(content, obfuscation_map):
         if original_name == 'PositiveIntent':
             with open(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../PositiveIntent.sln")), 'r+', encoding='utf-8') as file:
                 additional_content = file.read()
-                additional_content = re.sub(r'=\s"PositiveIntent"', f'= "{obfuscated_name}"', content)
+                additional_content = re.sub(r'=\s"PositiveIntent"', f'= "{obfuscated_name}"', additional_content)
     return content
 
 def update_strings(content, string_map):
