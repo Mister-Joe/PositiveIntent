@@ -58,6 +58,7 @@ python build.py --file /tmp/Rubeus.exe --hostname TEST --domain www.zoom.com --d
 | CrowdStrike | Internal Monologue | Detected |
 | Windows Defender | Rubeus | Undetected (10/10/2024) |
 | Windows Defender | Seatbelt | Undetected (10/10/2024) |
+| ESET | Rubeus | Undetected (10/18/2024) |
 
 ## Roadmap
 
