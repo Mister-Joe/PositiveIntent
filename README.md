@@ -62,7 +62,7 @@ python build.py --file /tmp/Rubeus.exe --hostname TEST --domain www.zoom.com --d
 
 ## Roadmap
 
-- Support .NET 4.5 or lower if possible
+- Support .NET Framework 4.5 or lower if possible
 - Add option to key on username
 - Programatically generate and randomize `assemblyinfo.cs`
 - Manually map `kernel32.dll` and `ntdll.dll` to bypass AV/EDR vendors using user-mode hooks (e.g. Cylance)
