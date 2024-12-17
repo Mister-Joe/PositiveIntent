@@ -20,7 +20,7 @@
   - Python post-build script signs the loader with a self-signed certificate using values cloned from a domain of your choice
   - No P/Invoke - full implementation of D/Invoke with API hashing
 - Compatibility
-  - Built with older .NET Framework 4.8 and C# 7.3 to ensure maximum compatibility with various Windows versions
+  - Built with older .NET Framework 4.8 and C# 7.3 for compatibility with various Windows versions
 
 ## Installation
 
@@ -62,11 +62,11 @@ python build.py --file /tmp/Rubeus.exe --hostname TEST --domain www.zoom.com --d
 
 ## Roadmap
 
-- Support .NET Framework 4.5 or lower if possible
 - Add option to key on username
+- Add option to key on AD domain
 - Programatically generate and randomize `assemblyinfo.cs`
-- Manually map `kernel32.dll` and `ntdll.dll` to bypass AV/EDR vendors using user-mode hooks (e.g. Cylance)
 - Manually parse PE headers of .NET assembly and stomp metadata before loading
+- Manually map `kernel32.dll` and `ntdll.dll` to evade user-mode hooks
 - Port all Python pre/post-build scripts to .NET & cross-compile for Linux
 - Improve error handling
 - ???
