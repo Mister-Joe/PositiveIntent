@@ -42,7 +42,7 @@ python build.py --file /tmp/Rubeus.exe --hostname TEST --domain www.zoom.com
 
 ## Detection Status
 > [!NOTE]  
-> Detection status is evaluated over RDP (i.e. no smbexec, wmiexec, etc).  
+> Detection status is evaluated by launching the loader via RDP access (i.e. no smbexec, wmiexec, etc).  
 
 | Vendor | Tool | Status |
 | ------------- | ------------- | ------------- |
