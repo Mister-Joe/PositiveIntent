@@ -68,10 +68,6 @@ def update_hostname(content, hostname):
     content = re.sub(r'TESTVM', hostname, content)
     return content
 
-def update_delay(content, delay):
-    content = re.sub(r'13371337', str(delay * 1000), content)
-    return content
-
 def randomize_assembly_name(csproj_filepath, new_name):
     
     # Parse the .csproj XML file
@@ -153,7 +149,7 @@ def process_file(file_path, obfuscation_map, string_map):
     obfuscate_classes(content, obfuscation_map)
     obfuscate_strings(content, obfuscation_map, string_map)
 
-def run(hostname, delay):
+def run(hostname):
     # Input and output directories
     input_dir = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../"))
     output_dir =  os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp"))
@@ -193,7 +189,6 @@ def run(hostname, delay):
                     content = update_references(content, obfuscation_map)
                     content = update_strings(content, string_map)
                     content = update_hostname(content, hostname)
-                    content = update_delay(content, delay)
                     file.seek(0)
                     file.write(content)
                     file.truncate()

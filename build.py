@@ -79,6 +79,9 @@ def build(assembly_name):
 
 if __name__=="__main__":
 
+    if sys.platform == 'win32':
+        colorama.init()
+    
     # parse arguments
     parser = argparse.ArgumentParser(description='PositiveIntent .NET Loader')
     parser.add_argument('--file', type=argparse.FileType('rb'),
@@ -87,15 +90,13 @@ if __name__=="__main__":
                         help='Restrict execution of loader to hostname')
     parser.add_argument('--domain', type=str, required=True,
                         help='Domain to copy certificate from. Used to generate a self-signed certificate and digitally sign the loader.')
-    parser.add_argument('--delay', type=int, required=True,
-                        help='Number of seconds to delay loader execution. 60 seconds at a minimum is recommended.')
     args = parser.parse_args()
 
     # obfuscate loader source
     # key on hostname
     # randomize assembly name
     try:
-        assembly_name = obfuscate.run(args.hostname, args.delay)
+        assembly_name = obfuscate.run(args.hostname)
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Obfuscated loader source files')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Keyed on hostname {args.hostname}')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Randomized loader filename")
