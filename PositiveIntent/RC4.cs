@@ -1,49 +1,55 @@
-﻿public class RC4
+﻿using System.Text;
+
+namespace PositiveIntent
 {
-    private byte[] S = new byte[256];
-    private int x = 0;
-    private int y = 0;
-
-    public RC4(byte[] key)
+    public class RC4
     {
-        KeySetup(key);
-    }
+        private byte[] S = new byte[256];
+        private int x = 0;
+        private int y = 0;
+        public static byte[] key = Encoding.UTF8.GetBytes("DepthSecurity"); // placeholder
 
-    private void KeySetup(byte[] key)
-    {
-        int keyLength = key.Length;
-        for (int i = 0; i < 256; i++)
+        public RC4(byte[] key)
         {
-            S[i] = (byte)i;
+            KeySetup(key);
         }
-
-        int j = 0;
-        for (int i = 0; i < 256; i++)
+        
+        private void KeySetup(byte[] key)
         {
-            j = (j + S[i] + key[i % keyLength]) % 256;
-            Swap(i, j);
+            int keyLength = key.Length;
+            for (int i = 0; i < 256; i++)
+            {
+                S[i] = (byte)i;
+            }
+
+            int j = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                j = (j + S[i] + key[i % keyLength]) % 256;
+                Swap(i, j);
+            }
         }
-    }
-
-    private void Swap(int i, int j)
-    {
-        byte temp = S[i];
-        S[i] = S[j];
-        S[j] = temp;
-    }
-
-    public byte[] EncryptDecrypt(byte[] data)
-    {
-        byte[] output = new byte[data.Length];
-        for (int k = 0; k < data.Length; k++)
+        
+        private void Swap(int i, int j)
         {
-            x = (x + 1) % 256;
-            y = (y + S[x]) % 256;
-            Swap(x, y);
-            byte keyStream = S[(S[x] + S[y]) % 256];
-            output[k] = (byte)(data[k] ^ keyStream);
+            byte temp = S[i];
+            S[i] = S[j];
+            S[j] = temp;
         }
+        
+        public byte[] EncryptDecrypt(byte[] data)
+        {
+            byte[] output = new byte[data.Length];
+            for (int k = 0; k < data.Length; k++)
+            {
+                x = (x + 1) % 256;
+                y = (y + S[x]) % 256;
+                Swap(x, y);
+                byte keyStream = S[(S[x] + S[y]) % 256];
+                output[k] = (byte)(data[k] ^ keyStream);
+            }
 
-        return output;
+            return output;
+        }
     }
 }
