@@ -59,13 +59,13 @@ python build.py --file /tmp/Rubeus.exe --hostname TEST --domain www.zoom.com
 
 ## Roadmap
 
-- Add option to key on username
+- ~~Add optional flag to hardcode arguments to be passed to assembly~~
+- ~~Add optional flag to redirect output to an encrypted file~~
+- ~~Randomize encryption key per build~~
+- Refactor Python pre-build scripts (a complete mess)
+- Dynamically generate & randomize `assemblyinfo.cs`
 - Add option to key on AD domain
-- Add support for 32 bit processes
-- Programatically generate and randomize `assemblyinfo.cs`
-- Port all Python pre/post-build scripts to .NET & cross-compile for Linux
-- Improve error handling
-- ???
+- Improve error handling where possible
 
 ## References
 [Anatomy of a .NET Assembly – The DOS Stub](https://www.red-gate.com/simple-talk/blogs/anatomy-of-a-net-assembly-the-dos-stub/)  
