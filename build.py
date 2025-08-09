@@ -38,7 +38,7 @@ def embed_book(resx_file_path, resource_name, text_file_path):
 
 def build(assembly_name):
 
-    assembly_output_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"temp/PositiveIntent/bin/Release/net48/{assembly_name}.exe"))
+    assembly_output_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"temp/PositiveIntent/bin/Release/net451/{assembly_name}.exe"))
     solution_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp/PositiveIntent.sln"))
     resources_directory_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp/PositiveIntent/Resources"))
     resources_file_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp/PositiveIntent/Properties/Resources.resx"))

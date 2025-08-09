@@ -13,6 +13,11 @@ namespace PositiveIntent
         {
             // Find the address of AmsiScanBuffer in amsi.dll - this will be the pattern searched for in clr.dll to find offset
             IntPtr amsiBaseAddress = Generic.GetLoadedModuleAddress("1C8F3CFDEC271DBD686AEB8093941FC1", 0x123456789); // amsi.dll
+            if (amsiBaseAddress == IntPtr.Zero)
+            {
+                throw new Exception("Failed to find base address of module.");
+            }
+
             IntPtr pAmsiScanBuffer = Generic.GetExportAddress(amsiBaseAddress, "1E6747A9601D28CFB5B9AE9B0559BD89", 0x123456789); // AmsiScanBuffer
             long pattern = pAmsiScanBuffer.ToInt64();
 

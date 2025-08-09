@@ -65,7 +65,7 @@ def save_pkcs12(cert, private_key, output_filename, password):
 # Step 4: Digitally Sign Executable File
 def sign_executable(p12_path, assembly_name):
 
-    unsigned_loader_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../temp/PositiveIntent/bin/Release/net48/{assembly_name}.exe"))
+    unsigned_loader_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../temp/PositiveIntent/bin/Release/net451/{assembly_name}.exe"))
     signed_loader_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../temp/{assembly_name}.exe"))
     osslsigncode_path = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../windows_dependencies/osslsigncode.exe"))
 

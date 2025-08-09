@@ -248,7 +248,9 @@ namespace PositiveIntent.DINV
                 };
             }
 
-            var parameters = Array.Empty<object>();
+            // Array.Empty isn't available in .NET Framework 4.5.1
+            //var parameters = Array.Empty<object>();
+            var parameters = new object[0];
 
             return DynamicAsmInvoke<IntPtr>(
                 stub,
@@ -432,7 +434,7 @@ namespace PositiveIntent.DINV
         /// <param name="key">64-bit integer to initialize the keyed hash object (e.g. 0xabc or 0x1122334455667788).</param>
         /// <param name="resolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetExportAddress(IntPtr moduleBase, string functionHash, long key, bool resolveForwards = true)
+        /*public static IntPtr GetExportAddress(IntPtr moduleBase, string functionHash, long key, bool resolveForwards = true)
         {
             var functionPtr = IntPtr.Zero;
             
@@ -467,6 +469,74 @@ namespace PositiveIntent.DINV
                     if (resolveForwards)
                         functionPtr = GetForwardAddress(functionPtr);
 
+                    break;
+                }
+            }
+            catch
+            {
+                throw new InvalidOperationException("Failed to parse module exports.");
+            }
+
+            if (functionPtr == IntPtr.Zero)
+                throw new MissingMethodException(functionHash + ", export hash not found.");
+            
+            return functionPtr;
+        }*/
+
+        public static IntPtr GetExportAddress(IntPtr moduleBase, string functionHash, long key, bool resolveForwards = true)
+        {
+            var functionPtr = IntPtr.Zero;
+
+            try
+            {
+                // Read 4 bytes at a time into byte arrays, then convert
+                var peHeaderBytes = new byte[4];
+                Marshal.Copy(IntPtr.Add(moduleBase, 0x3C), peHeaderBytes, 0, 4);
+                var peHeader = BitConverter.ToInt32(peHeaderBytes, 0);
+
+                var magicBytes = new byte[2];
+                Marshal.Copy(IntPtr.Add(moduleBase, peHeader + 0x18), magicBytes, 0, 2);
+                var magic = BitConverter.ToInt16(magicBytes, 0);
+
+                int exportOffset = (magic == 0x010b) ? peHeader + 0x18 + 0x60 : peHeader + 0x18 + 0x70;
+
+                var exportRvaBytes = new byte[4];
+                Marshal.Copy(IntPtr.Add(moduleBase, exportOffset), exportRvaBytes, 0, 4);
+                var exportRva = BitConverter.ToInt32(exportRvaBytes, 0);
+
+                // Continue with this pattern for the rest of the reads...
+                var exportStructBytes = new byte[20]; // Read the whole export structure at once
+                Marshal.Copy(IntPtr.Add(moduleBase, exportRva + 0x10), exportStructBytes, 0, 20);
+
+                var ordinalBase = BitConverter.ToInt32(exportStructBytes, 0);
+                var numberOfNames = BitConverter.ToInt32(exportStructBytes, 8);
+                var functionsRva = BitConverter.ToInt32(exportStructBytes, 12);
+                var namesRva = BitConverter.ToInt32(exportStructBytes, 16);
+                var ordinalsRva = BitConverter.ToInt32(exportStructBytes, 20);
+
+                for (var i = 0; i < numberOfNames; i++)
+                {
+                    var nameRvaBytes = new byte[4];
+                    Marshal.Copy(IntPtr.Add(moduleBase, namesRva + i * 4), nameRvaBytes, 0, 4);
+                    var nameRva = BitConverter.ToInt32(nameRvaBytes, 0);
+
+                    var functionName = Marshal.PtrToStringAnsi(IntPtr.Add(moduleBase, nameRva));
+
+                    if (string.IsNullOrWhiteSpace(functionName)) continue;
+                    if (!Utilities.GetApiHash(functionName, key).Equals(functionHash, StringComparison.OrdinalIgnoreCase)) continue;
+
+                    var ordinalBytes = new byte[2];
+                    Marshal.Copy(IntPtr.Add(moduleBase, ordinalsRva + i * 2), ordinalBytes, 0, 2);
+                    var functionOrdinal = BitConverter.ToInt16(ordinalBytes, 0) + ordinalBase;
+
+                    var functionRvaBytes = new byte[4];
+                    Marshal.Copy(IntPtr.Add(moduleBase, functionsRva + 4 * (functionOrdinal - ordinalBase)), functionRvaBytes, 0, 4);
+                    var functionRva = BitConverter.ToInt32(functionRvaBytes, 0);
+
+                    functionPtr = IntPtr.Add(moduleBase, functionRva);
+
+                    if (resolveForwards)
+                        functionPtr = GetForwardAddress(functionPtr);
                     break;
                 }
             }

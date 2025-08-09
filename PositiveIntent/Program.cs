@@ -86,8 +86,18 @@ namespace PositiveIntent
             // Need to improve exception handling both globally and locally - handle some exceptions locally if recoverable
             catch (Exception ex)
             {
-                Console.WriteLine("\nSomething has gone terribly wrong.\n");
-                Console.WriteLine(ex.ToString());
+                // amsi.dll isn't loaded so we can proceed
+                // usually this happens when we're running on a system with .NET Framework versions older than 4.8
+                // https://devblogs.microsoft.com/dotnet/announcing-the-net-framework-4-8/
+                if (ex.Message == "Failed to find base address of module.")
+                {
+                    AssemblyHelper.LoadAssembly(args);
+                }
+                else
+                {
+                    Console.WriteLine("\nSomething has gone terribly wrong.\n");
+                    Console.WriteLine(ex.ToString());
+                }
             }
         }
     }
