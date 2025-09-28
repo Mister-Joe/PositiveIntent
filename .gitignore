@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/PositiveIntent/DesignTimeBuild
+/.vs/PositiveIntent/FileContentIndex
+/.vs/PositiveIntent/v17
+/.vs/ProjectEvaluation
+/.vs
+/PositiveIntent/obj
