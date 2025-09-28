@@ -59,15 +59,5 @@ namespace PositiveIntent.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] File1 {
-            get {
-                object obj = ResourceManager.GetObject("File1", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

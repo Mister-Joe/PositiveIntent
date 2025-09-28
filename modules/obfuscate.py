@@ -105,6 +105,13 @@ def update_hostname(content, hostname):
     content = re.sub(r'TESTVM', hostname, content)
     return content
 
+def update_resource_references(content, num_chunks, obfuscation_map):
+    resources = ''
+    for i in range(num_chunks):
+        resources += (f"{obfuscation_map['chunks']}.Add(Resources.FileChunk{i});\n            ")
+    content = re.sub(re.escape(f"{obfuscation_map['chunks']}.Add(Resources.FileChunk1);"), resources, content)
+    return content
+
 def randomize_assembly_name(csproj_filepath, new_name):
     
     # Parse the .csproj XML file
@@ -186,7 +193,7 @@ def process_file(file_path, obfuscation_map, string_map):
     obfuscate_classes(content, obfuscation_map)
     obfuscate_strings(content, obfuscation_map, string_map)
 
-def run(hostname, args, writetofile):
+def run(hostname, num_chunks, args, writetofile):
     # Input and output directories
     input_dir = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../"))
     output_dir =  os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../temp"))
@@ -232,6 +239,7 @@ def run(hostname, args, writetofile):
                     content = update_references(content, obfuscation_map)
                     content = update_strings(content, string_map)
                     content = update_hostname(content, hostname)
+                    content = update_resource_references(content, num_chunks, obfuscation_map)
                     file.seek(0)
                     file.write(content)
                     file.truncate()

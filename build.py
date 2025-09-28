@@ -81,6 +81,7 @@ if __name__=="__main__":
 
     if sys.platform == 'win32':
         colorama.init()
+    num_chunks = random.randint(10, 20)
     
     # parse arguments
     parser = argparse.ArgumentParser(description='PositiveIntent .NET Loader')
@@ -100,14 +101,22 @@ if __name__=="__main__":
     # key on hostname
     # randomize assembly name
     try:
+        if not args.args or not args.writetofile:
+            while True:
+                response = input(colorama.Fore.RED + "[-] " + colorama.Style.RESET_ALL + f"You aren't using --args and --writetofile. This is bad opsec. Are you sure you want to proceed? (Y/N): ")
+                if response.strip().lower() in ['n', 'no']:
+                    sys.exit(-1)
+                elif response.strip().lower() in ['y', 'yes']:
+                    break
         if(args.args and not args.writetofile):
-            assembly_name, key = obfuscate.run(args.hostname, args.args, None)
+            assembly_name, key = obfuscate.run(args.hostname, num_chunks, args.args, None)
         elif(args.writetofile and not args.args):
-            assembly_name, key = obfuscate.run(args.hostname, None, args.writetofile)
+            assembly_name, key = obfuscate.run(args.hostname, num_chunks, None, args.writetofile)
         elif(args.args and args.writetofile):
-            assembly_name, key = obfuscate.run(args.hostname, args.args, args.writetofile)
+            assembly_name, key = obfuscate.run(args.hostname, num_chunks, args.args, args.writetofile)
         else:
-            assembly_name, key = obfuscate.run(args.hostname, None, None)
+            assembly_name, key = obfuscate.run(args.hostname, num_chunks, None, None)
+
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Obfuscated loader source files')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f'Keyed on hostname {args.hostname}')
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Randomized loader filename")
@@ -118,7 +127,7 @@ if __name__=="__main__":
 
     # encrypt .NET assembly and embed as a resource file
     try:
-        rc4.run(args.file, key.encode('utf-8'))
+        rc4.run(args.file, num_chunks, key.encode('utf-8'))
         print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Encrypted and embedded {args.file.name} as a resource file")
         if(args.writetofile):
             print(colorama.Fore.BLUE + "[*] " + colorama.Style.RESET_ALL + f"Your decryption key is {key}")

