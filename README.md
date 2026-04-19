@@ -54,14 +54,13 @@ $entrypoint.Invoke($null, @(,$arguments))
 - Built with .NET Framework 4.5.1 and C# 7.3 for compatibility with various Windows versions.
 
 ## References
-[CrowdStrike Researchers Investigate the Threat of Patchless AMSI Bypass Attacks](https://www.crowdstrike.com/en-us/blog/crowdstrike-investigates-threat-of-patchless-amsi-bypass-attacks/)
+[CrowdStrike Researchers Investigate the Threat of Patchless AMSI Bypass Attacks](https://www.crowdstrike.com/en-us/blog/crowdstrike-investigates-threat-of-patchless-amsi-bypass-attacks/)  
 [Anatomy of a .NET Assembly – The DOS Stub](https://www.red-gate.com/simple-talk/blogs/anatomy-of-a-net-assembly-the-dos-stub/)  
 [A Dive Into the PE File Format](https://0xrick.github.io/win-internals/pe3)  
 [Hiding your .NET - ETW](https://blog.xpnsec.com/hiding-your-dotnet-etw/)  
 [Red Team Tradecraft: Loading Encrypted C# Assemblies In Memory](https://www.mike-gualtieri.com/posts/red-team-tradecraft-loading-encrypted-c-sharp-assemblies-in-memory)  
-[Building, Modifying, and Packing with Azure DevOps](https://blog.xpnsec.com/building-modifying-packing-devops/)
-[Announcing the .NET Framework 4.8](https://devblogs.microsoft.com/dotnet/announcing-the-net-framework-4-8/)
-[Understanding ETW Patching](https://jonny-johnson.medium.com/understanding-etw-patching-9f5af87f9d7b)
-[DeepSeek](https://deepseek.com/) 
+[Building, Modifying, and Packing with Azure DevOps](https://blog.xpnsec.com/building-modifying-packing-devops/)  
+[Announcing the .NET Framework 4.8](https://devblogs.microsoft.com/dotnet/announcing-the-net-framework-4-8/)  
+[Understanding ETW Patching](https://jonny-johnson.medium.com/understanding-etw-patching-9f5af87f9d7b)  
 [ChatGPT](https://chatgpt.com/)  
 [Claude](https://claude.ai/)
