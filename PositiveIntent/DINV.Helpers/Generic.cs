@@ -506,7 +506,7 @@ namespace PositiveIntent.DINV
                     var forwardModuleName = values[0];
                     var forwardExportName = values[1];
 
-                    var apiSet = GetApiSetMapping();
+                    var apiSet = SafeGetApiSetMapping();
                     var lookupKey = forwardModuleName.Substring(0, forwardModuleName.Length - 2) + ".dll";
                     
                     if (apiSet.ContainsKey(lookupKey))
@@ -634,6 +634,20 @@ namespace PositiveIntent.DINV
             }
             
             return peMetaData;
+        }
+
+        [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+        [System.Security.SecurityCritical]
+        private static Dictionary<string, string> SafeGetApiSetMapping()
+        {
+            try
+            {
+                return GetApiSetMapping();
+            }
+            catch
+            {
+                return new Dictionary<string, string>();
+            }
         }
 
         /// <summary>

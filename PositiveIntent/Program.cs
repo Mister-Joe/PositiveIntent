@@ -2,9 +2,6 @@
 using System.IO;
 using System.Text;
 
-// https://devblogs.microsoft.com/dotnet/announcing-the-net-framework-4-8/
-// https://jonny-johnson.medium.com/understanding-etw-patching-9f5af87f9d7b
-
 namespace PositiveIntent
 {
     public class Program
@@ -28,14 +25,13 @@ namespace PositiveIntent
             {
                 if (CheckHostname())
                 {
-                    /*
                     if (shouldWriteToFile)
                     {
                         buffer = new MemoryStream();
                         writer = new StreamWriter(buffer, Encoding.UTF8) { AutoFlush = true };
                         Console.SetOut(writer);
                         Console.SetError(writer);
-                    }*/
+                    }
 
                     BreakpointHelper.SetupHandler();
 
@@ -51,21 +47,19 @@ namespace PositiveIntent
                         AssemblyHelper.LoadAssembly(args);
                     }
 
-                    /*
                     if (shouldWriteToFile)
                     {
                         writer.Flush();
                         byte[] bytes = buffer.ToArray();
                         RC4 rc4 = new RC4(RC4.key);
                         bytes = rc4.EncryptDecrypt(bytes);
-                        File.WriteAllBytes("log.txt", bytes);
-                    }*/
+                        File.WriteAllBytes($"{Directory.GetCurrentDirectory()}\\log.txt", bytes);
+                    }
                 }
             }
             // Need to improve exception handling both globally and locally - handle some exceptions locally if recoverable
             catch (Exception ex)
             {
-                File.WriteAllBytes("C:\\Users\\Joe\\source\\repos\\Mister-Joe\\PositiveIntent\\log.txt", Encoding.UTF8.GetBytes(ex.Message));
                 Console.WriteLine(ex.ToString());
             }
         }
