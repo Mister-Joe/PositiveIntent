@@ -68,7 +68,6 @@ def main():
             sys.exit(-1)
 
         # obfuscate user-provided assembly
-        
         try:
             subprocess.run(["docker", "run", "--rm", "-it", "-v", f"{tmp_dir}:/tmp", "-w", "/tmp", "mono", "/usr/bin/mono", "/tmp/NetFuscator/NetFuscator.exe", f"/tmp/{os.path.basename(args.file.name)}", input_assembly_name], check=True, stdout = subprocess.DEVNULL)
             print(colorama.Fore.GREEN + "[+] " + colorama.Style.RESET_ALL + f"Obfuscated {os.path.basename(args.file.name)}")
