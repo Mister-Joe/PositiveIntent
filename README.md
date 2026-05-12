@@ -1,8 +1,8 @@
 # PositiveIntent
 
-<img width="49%" alt="image" src="https://github.com/user-attachments/assets/cefc3281-8006-4b93-8cc5-3d232c27f61f" />
+<img alt="image" src="https://github.com/user-attachments/assets/cefc3281-8006-4b93-8cc5-3d232c27f61f" />
 
-<img width="49%" alt="image" src="https://github.com/user-attachments/assets/ac3b80a1-8180-4e54-9619-a9779f44af60" />
+<img alt="image" src="https://github.com/user-attachments/assets/ac3b80a1-8180-4e54-9619-a9779f44af60" />
 
 ## Installation
 
